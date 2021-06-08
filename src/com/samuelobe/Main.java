@@ -5,7 +5,11 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner inObj = new Scanner(System.in);
+        Scanner enterNumberObj = new Scanner(System.in);
+        Scanner enterPINObj = new Scanner(System.in);
         String input = "";
+        String numberInput;
+        String PINInput;
         Card card = null;
 
         while(!(input.equals("0"))){
@@ -29,9 +33,31 @@ public class Main {
                 }
                 case "2" -> {
                     System.out.println();
-                    System.out.println("Enter your card number:");
-                    System.out.println("Enter your PIN:");
+                    if (card == null) {
+                        System.out.println("Card has not been created yet");
+                    }
+                    else{
+                        while (true){
+                            System.out.println("Enter your card number:");
+                            numberInput = enterNumberObj.nextLine();
+                            System.out.println("Enter your PIN:");
+                            PINInput = enterPINObj.nextLine();
+                            boolean correctValues = card.checkNumberAndPIN(numberInput, PINInput);
+                            if (!correctValues){
+                                System.out.println();
+                                System.out.println("Wrong card number or PIN!");
+                                System.out.println();
+                            }
+                            else{
+                                System.out.println();
+                                System.out.println("You have successfully logged in!");
+                                break;
+                            }
+                        }
+
+                    }
                     System.out.println();
+
                 }
                 case "0" -> System.out.println("\nBye!");
             }
@@ -51,46 +77,46 @@ class Card {
     Card(){
         Random random = new Random();
         // Generate Card number
-        this.number = new int[16];
-        this.number[0] = 4;
+        int[] number = new int[16];
+        number[0] = 4;
         for (int i = 1; i < 6; i++){
-            this.number[i] = 0;
+            number[i] = 0;
         }
         for (int i = 6; i < 16; i++) {
-            this.number[i] = random.nextInt(10);
+            number[i] = random.nextInt(10);
         }
         // Generate PIN number
-        this.PIN = new int[4];
+        int[] PIN = new int[4];
         for (int i = 0; i < 4; i++) {
-            this.PIN[i] = random.nextInt(4);
+            PIN[i] = random.nextInt(4);
         }
+
+        this.numberStr = convertToString(number);
+        this.PINStr = convertToString(PIN);
     }
 
-    private int[] number;
-    private int[] PIN;
+    private final String numberStr;
+    private final String PINStr;
 
-    public void printNumber() {
+    private String convertToString(int[] num){
         StringBuilder str = new StringBuilder();
         for (int n:
-             this.number) {
+                num) {
             str.append(n);
         }
-        System.out.println(str);
+        return str.toString();
+    }
+
+
+    public void printNumber() {
+        System.out.println(numberStr);
     }
 
     public void printPIN() {
-        StringBuilder str = new StringBuilder();
-        for (int n:
-                this.PIN) {
-            str.append(n);
-        }
-        System.out.println(str);
+        System.out.println(PINStr);
     }
 
     public boolean checkNumberAndPIN(String cardNumber, String cardPIN){
-
-        return false;
+        return cardNumber.equals(this.numberStr) && cardPIN.equals(this.PINStr);
     }
 }
-
-
